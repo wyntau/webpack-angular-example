@@ -4,8 +4,14 @@
   "description": "webpack example",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "rm -rf dist && webpack"
   },
   "author": "Treri",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.23.0",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.9"
+  }
 }

@@ -1,6 +1,6 @@
 define([
   'app',
-  'style!css!styles/homeCtrl',
+  'style!css!styles/homeCtrl.css',
   'services/serviceNormalA',
   'services/serviceNormalB'
 ], function(app){

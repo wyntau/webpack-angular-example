@@ -1,6 +1,6 @@
 define([
   'app',
-  'style!css!styles/rootCtrl'
+  'style!css!styles/rootCtrl.css',
   'services/serviceRootA'
 ], function(app){
   app.controller('rootCtrl', [

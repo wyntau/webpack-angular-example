@@ -71,18 +71,18 @@ define([
             })
           }
         })
-        .state('example.baz', {
-          url: '/baz',
-          templateUrl: 'views/baz.html',
-          controller: 'bazCtrl',
-          resolve: {
-            deps: requirePromise(function(resolve){
-              require([
-                'controllers/bazCtrl'
-              ], resolve);
-            })
-          }
-        })
+        // .state('example.baz', {
+        //   url: '/baz',
+        //   templateUrl: 'views/baz.html',
+        //   controller: 'bazCtrl',
+        //   resolve: {
+        //     deps: requirePromise(function(resolve){
+        //       require([
+        //         'controllers/bazCtrl'
+        //       ], resolve);
+        //     })
+        //   }
+        // })
     }
   ])
 

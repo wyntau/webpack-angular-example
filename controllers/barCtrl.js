@@ -1,6 +1,6 @@
 define([
   'app',
-  'style!css!styles/barCtrl',
+  'style!css!styles/barCtrl.css',
   'services/serviceNormalB',
   'services/serviceNormalC'
 ], function(app){

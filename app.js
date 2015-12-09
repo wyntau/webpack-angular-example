@@ -1,7 +1,6 @@
 define(function(){
   var app = angular.module('webpack-example', [
-    'ui.router',
-    'ngRequire'
+    'ui.router'
   ]);
 
   app.config([
