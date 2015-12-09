@@ -10,8 +10,8 @@ module.exports = {
     ]
   },
   entry: {
-    main: path.resolve(__dirname, 'main.js'),
-    app: ['app'],
+    app: [path.resolve(__dirname, 'app.js')],
+    // app: ['app'],
     service_serviceRootA: ['services/serviceRootA'],
     service_serviceNormalA: ['services/serviceNormalA'],
     service_serviceNormalB: ['services/serviceNormalB'],
@@ -29,7 +29,8 @@ module.exports = {
         'services/serviceRootA',
         'services/serviceNormalA',
         'services/serviceNormalB',
-        'services/serviceNormalC'
+        'services/serviceNormalC',
+        'app'
       ],
       minChunks: Infinity
     })
