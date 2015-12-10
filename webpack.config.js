@@ -10,7 +10,7 @@ module.exports = {
     ]
   },
   entry: {
-    app: [path.resolve(__dirname, 'app.js')]
+    main: path.resolve(__dirname, 'main.js')
   },
   output: {
     path: 'dist',
