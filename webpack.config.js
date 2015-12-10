@@ -24,6 +24,10 @@ module.exports = {
         test: /services\/.*/,
         exclude: /runtimes\/[^\/]*\/.*/,
         loader: 'then?global,[name]'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css'
       }
     ]
   }

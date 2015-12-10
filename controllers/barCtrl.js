@@ -1,6 +1,6 @@
 module.exports = Promise.all([
   require('app'),
-  require('style!css!styles/barCtrl.css'),
+  require('styles/barCtrl.css'),
   require('services/serviceNormalB'),
   require('services/serviceNormalC')
 ]).then(function(ret){

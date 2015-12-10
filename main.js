@@ -2,20 +2,20 @@ module.exports = Promise.all([
   require('app'),
   require('runtimes/services/serviceRootA'),
   require('controllers/rootCtrl')
-]).then(function(ret){
+]).then(function(ret) {
 
-var requirePromise = function(loading) {
-  return function(){
-    return new Promise(function(resolve, reject){
-      loading(resolve);
-    });
-  }
-};
+  var requirePromise = function(loading) {
+    return function() {
+      return new Promise(function(resolve, reject) {
+        loading(resolve);
+      });
+    }
+  };
   ret[0].config([
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider){
+    function($stateProvider, $urlRouterProvider, $locationProvider) {
 
       $locationProvider.html5Mode(true);
       $urlRouterProvider.otherwise('/example/');
@@ -32,7 +32,7 @@ var requirePromise = function(loading) {
           templateUrl: 'views/home.html',
           controller: 'homeCtrl',
           resolve: {
-            deps: requirePromise(function(resolve){
+            deps: requirePromise(function(resolve) {
               require([
                 'controllers/homeCtrl'
               ], resolve);
@@ -44,7 +44,7 @@ var requirePromise = function(loading) {
           templateUrl: 'views/foo.html',
           controller: 'fooCtrl',
           resolve: {
-            deps: requirePromise(function(resolve){
+            deps: requirePromise(function(resolve) {
               require([
                 'controllers/fooCtrl'
               ], resolve);
@@ -56,7 +56,7 @@ var requirePromise = function(loading) {
           templateUrl: 'views/bar.html',
           controller: 'barCtrl',
           resolve: {
-            deps: requirePromise(function(resolve){
+            deps: requirePromise(function(resolve) {
               require([
                 'controllers/barCtrl'
               ], resolve);
