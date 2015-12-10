@@ -1,10 +1,10 @@
-define([
-  'app',
-  'style!css!styles/homeCtrl.css',
-  'services/serviceNormalA',
-  'services/serviceNormalB'
-], function(app){
-  app.controller('homeCtrl', [
+module.exports = Promise.all([
+  require('app'),
+  require('style!css!styles/homeCtrl.css'),
+  require('services/serviceNormalA'),
+  require('services/serviceNormalB')
+]).then(function(ret){
+  ret[0].controller('homeCtrl', [
     '$scope',
     'serviceNormalA',
     'serviceNormalB',

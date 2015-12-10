@@ -1,10 +1,10 @@
-define([
-  'app',
-  'style!css!styles/fooCtrl.css',
-  'services/serviceNormalA',
-  'services/serviceNormalC'
-], function(app){
-  app.controller('fooCtrl', [
+module.exports = Promise.all([
+  require('app'),
+  require('style!css!styles/fooCtrl.css'),
+  require('services/serviceNormalA'),
+  require('services/serviceNormalC')
+]).then(function(ret){
+  ret[0].controller('fooCtrl', [
     '$scope',
     'serviceNormalA',
     'serviceNormalC',

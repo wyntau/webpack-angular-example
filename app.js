@@ -4,13 +4,11 @@ define(function(){
   ]);
 
   var requirePromise = function(loading) {
-    return ['$q', '$rootScope', function($q, $rootScope) {
-      var deferred = $q.defer();
-      loading(function() {
-        deferred.resolve();
+    return function(){
+      return new Promise(function(resolve, reject){
+        loading(resolve);
       });
-      return deferred.promise;
-    }];
+    }
   };
 
   app.config([
@@ -62,7 +60,10 @@ define(function(){
             deps: requirePromise(function(resolve){
               require([
                 'controllers/homeCtrl'
-              ], resolve);
+              ], function(aa){
+                console.log(aa);
+                resolve(aa);
+              });
             })
           }
         })

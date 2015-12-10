@@ -11,9 +11,9 @@
   "license": "MIT",
   "devDependencies": {
     "css-loader": "^0.23.0",
-    "promise-loader": "^1.0.0",
     "serve": "^1.4.0",
     "style-loader": "^0.13.0",
+    "then-loader": "^1.0.0",
     "webpack": "^1.12.9"
   }
 }

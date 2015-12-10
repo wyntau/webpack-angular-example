@@ -10,12 +10,7 @@ module.exports = {
     ]
   },
   entry: {
-    app: [path.resolve(__dirname, 'app.js')],
-    // app: ['app'],
-    service_serviceRootA: ['services/serviceRootA'],
-    service_serviceNormalA: ['services/serviceNormalA'],
-    service_serviceNormalB: ['services/serviceNormalB'],
-    service_serviceNormalC: ['services/serviceNormalC']
+    app: [path.resolve(__dirname, 'app.js')]
   },
   output: {
     path: 'dist',
@@ -23,23 +18,20 @@ module.exports = {
     filename: '[name].js',
     pathinfo: true
   },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      names: [
-        'services/serviceRootA',
-        'services/serviceNormalA',
-        'services/serviceNormalB',
-        'services/serviceNormalC',
-        'app'
-      ],
-      minChunks: Infinity
-    })
-  ],
   module: {
     loaders: [
       {
-        test: /services\/.*/,
-        loader: 'promise?global'
+        test: function(string){
+          if(string.match(/services\/.*/)){
+            if(string.match(/runtimes\/[^\/]*\/.*/)){
+              return false;
+            }else{
+              return true;
+            }
+          }
+          return false;
+        },
+        loader: 'then?global,[name]'
       }
     ]
   }
