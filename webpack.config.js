@@ -34,5 +34,13 @@ module.exports = {
       ],
       minChunks: Infinity
     })
-  ]
+  ],
+  module: {
+    loaders: [
+      {
+        test: /services\/.*/,
+        loader: 'promise?global'
+      }
+    ]
+  }
 }
