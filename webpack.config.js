@@ -17,6 +17,13 @@ module.exports = {
     filename: '[name].js',
     pathinfo: true
   },
+  // plugins: [
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     compress: {
+  //       warnings: false
+  //     }
+  //   })
+  // ],
   module: {
     loaders: [
       {
