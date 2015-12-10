@@ -21,16 +21,8 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: function(string){
-          if(string.match(/services\/.*/)){
-            if(string.match(/runtimes\/[^\/]*\/.*/)){
-              return false;
-            }else{
-              return true;
-            }
-          }
-          return false;
-        },
+        test: /services\/.*/,
+        exclude: /runtimes\/[^\/]*\/.*/,
         loader: 'then?global,[name]'
       }
     ]
