@@ -6,9 +6,7 @@ module.exports = Promise.all([
 
   var requirePromise = function(loading) {
     return function() {
-      return new Promise(function(resolve, reject) {
-        loading(resolve);
-      });
+      return new Promise(loading);
     }
   };
   app.config([
