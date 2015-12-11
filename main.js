@@ -1,8 +1,8 @@
 module.exports = Promise.all([
-  require('app'),
-  require('runtimes/services/serviceRootA'),
-  require('controllers/rootCtrl')
-]).then(function(ret) {
+  require('app.js'),
+  require('runtimes/services/serviceRootA.js'),
+  require('controllers/rootCtrl.js')
+]).then(function([app, ...args]) {
 
   var requirePromise = function(loading) {
     return function() {
@@ -11,7 +11,7 @@ module.exports = Promise.all([
       });
     }
   };
-  ret[0].config([
+  app.config([
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',

@@ -1,10 +1,10 @@
 module.exports = Promise.all([
-  require('app'),
+  require('app.js'),
   require('styles/fooCtrl.css'),
-  require('services/serviceNormalA'),
-  require('services/serviceNormalC')
-]).then(function(ret){
-  ret[0].controller('fooCtrl', [
+  require('services/serviceNormalA.js'),
+  require('services/serviceNormalC.js')
+]).then(function([app, ...args]){
+  app.controller('fooCtrl', [
     '$scope',
     'serviceNormalA',
     'serviceNormalC',
