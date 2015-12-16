@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "rm -rf dist && webpack",
-    "dev-server": "webpack-dev-server --colors --inline --progress"
+    "dev-server": "webpack-dev-server --colors --progress"
   },
   "author": "Treri",
   "license": "MIT",
