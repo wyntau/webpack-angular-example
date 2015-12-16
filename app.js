@@ -41,6 +41,13 @@ app.config([
         url: '/example',
         template: '<div ui-view></div>',
         controller: 'rootCtrl',
+        resolve: {
+          deps: requirePromise(function(resolve){
+            require([
+              'controllers/rootCtrl'
+            ], resolve);
+          })
+        }
       })
       .state('example.home', {
         url: '/',

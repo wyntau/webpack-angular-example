@@ -11,7 +11,7 @@ module.exports = {
     ]
   },
   entry: {
-    main: path.resolve(__dirname, 'boot.js')
+    boot: [path.resolve(__dirname, 'boot.js')]
   },
   output: {
     path: 'dist',
@@ -19,19 +19,19 @@ module.exports = {
     filename: '[name].js',
     pathinfo: true
   },
-  plugins: [
-    new ReplaceTaskWebpackPlugin({
-      patterns: [{
-        match: 'foo',
-        replacement: 'foo+bar'
-      }]
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ],
+  // plugins: [
+  //   new ReplaceTaskWebpackPlugin({
+  //     patterns: [{
+  //       match: 'foo',
+  //       replacement: 'foo+bar'
+  //     }]
+  //   }),
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     compress: {
+  //       warnings: false
+  //     }
+  //   })
+  // ],
   module: {
     loaders: [
       {
