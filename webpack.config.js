@@ -11,11 +11,13 @@ module.exports = {
     ]
   },
   entry: {
-    boot: [path.resolve(__dirname, 'boot.js')]
+    boot: [
+      path.resolve(__dirname, 'boot.js')
+    ]
   },
   output: {
     path: 'dist',
-    publicPath: '/dist/',
+    publicPath: 'http://localhost:8080/dist/',
     filename: '[name].js',
     pathinfo: true
   },
