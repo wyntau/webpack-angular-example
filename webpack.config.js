@@ -47,6 +47,13 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style!css'
+      },
+      {
+        test: /\.css$/,
+        loader: 'autoprefixer',
+        query: {
+          browsers: ['> 1%']
+        }
       }
     ]
   }
