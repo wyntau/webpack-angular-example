@@ -20,9 +20,9 @@ app.config([
   }
 ]);
 
-var Loading = function(loading, callback){
+var Loading = function(loading){
   return function(){
-    return Pending(loading, callback);
+    return Pending(loading);
   }
 }
 
