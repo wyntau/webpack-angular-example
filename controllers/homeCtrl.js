@@ -1,9 +1,12 @@
-module.exports = Promise.all([
-  require('app.js'),
-  require('styles/homeCtrl.css'),
-  require('services/serviceNormalA.js'),
-  require('services/serviceNormalB.js')
-]).then(function([app, ...args]){
+
+module.exports = Pending(function(resolve){
+  define([
+    'app.js',
+    'styles/homeCtrl.css',
+    'services/serviceNormalA.js',
+    'services/serviceNormalB.js'
+  ], resolve);
+}, function(app){
   app.controller('homeCtrl', [
     '$scope',
     'serviceNormalA',

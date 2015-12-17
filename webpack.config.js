@@ -34,11 +34,11 @@ module.exports = {
   // ],
   module: {
     loaders: [
-      {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel?presets[]=es2015'
-      },
+      // {
+      //   test: /\.jsx?$/,
+      //   exclude: /(node_modules|bower_components)/,
+      //   loader: 'babel?presets[]=es2015'
+      // },
       {
         test: /services\/.*/,
         exclude: /runtimes\/[^\/]*\/.*/,

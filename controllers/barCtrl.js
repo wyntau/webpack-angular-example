@@ -1,9 +1,12 @@
-module.exports = Promise.all([
-  require('app.js'),
-  require('styles/barCtrl.css'),
-  require('services/serviceNormalB.js'),
-  require('services/serviceNormalC.js')
-]).then(function([app, ...args]){
+
+module.exports = Pending(function(resolve){
+  define([
+    'app.js',
+    'styles/barCtrl.css',
+    'services/serviceNormalB.js',
+    'services/serviceNormalC.js'
+  ], resolve);
+}, function(app){
   app.controller('barCtrl', [
     '$scope',
     'serviceNormalB',
@@ -12,4 +15,4 @@ module.exports = Promise.all([
       $scope.location = 'barCtrl';
     }
   ])
-})
+});

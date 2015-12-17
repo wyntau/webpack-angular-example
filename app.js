@@ -20,20 +20,11 @@ app.config([
   }
 ]);
 
-var requirePromise = function(loading) {
-  // use angular's $q
-  return ['$q', function($q){
-    var deferred = $q.defer();
-    loading(function(){
-      $q.all([].slice.call(arguments)).then(deferred.resolve, deferred.reject);
-    });
-    return deferred.promise;
-  }];
-  // // use es6-promise
-  // return function() {
-  //   return new Promise(loading);
-  // }
-};
+var Loading = function(loading, callback){
+  return function(){
+    return Pending(loading, callback);
+  }
+}
 
 app.config([
   '$stateProvider',
@@ -51,7 +42,7 @@ app.config([
         template: '<div ui-view></div>',
         controller: 'rootCtrl',
         resolve: {
-          deps: requirePromise(function(resolve){
+          deps: Loading(function(resolve){
             require([
               'controllers/rootCtrl'
             ], resolve);
@@ -63,7 +54,7 @@ app.config([
         templateUrl: 'views/home.html',
         controller: 'homeCtrl',
         resolve: {
-          deps: requirePromise(function(resolve) {
+          deps: Loading(function(resolve) {
             require([
               'controllers/homeCtrl'
             ], resolve);
@@ -75,7 +66,7 @@ app.config([
         templateUrl: 'views/foo.html',
         controller: 'fooCtrl',
         resolve: {
-          deps: requirePromise(function(resolve) {
+          deps: Loading(function(resolve) {
             require([
               'controllers/fooCtrl'
             ], resolve);
@@ -87,7 +78,7 @@ app.config([
         templateUrl: 'views/bar.html',
         controller: 'barCtrl',
         resolve: {
-          deps: requirePromise(function(resolve) {
+          deps: Loading(function(resolve) {
             require([
               'controllers/barCtrl'
             ], resolve);
