@@ -21,9 +21,18 @@ app.config([
 ]);
 
 var requirePromise = function(loading) {
-  return function() {
-    return new Promise(loading);
-  }
+  // use angular's $q
+  return ['$q', function($q){
+    var deferred = $q.defer();
+    loading(function(){
+      $q.all([].slice.call(arguments)).then(deferred.resolve, deferred.reject);
+    });
+    return deferred.promise;
+  }];
+  // // use es6-promise
+  // return function() {
+  //   return new Promise(loading);
+  // }
 };
 
 app.config([

@@ -11,9 +11,7 @@ module.exports = {
     ]
   },
   entry: {
-    boot: [
-      path.resolve(__dirname, 'boot.js')
-    ]
+    boot: 'boot.js'
   },
   output: {
     path: 'dist',
