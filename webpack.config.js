@@ -34,11 +34,6 @@ module.exports = {
   // ],
   module: {
     loaders: [
-      // {
-      //   test: /\.jsx?$/,
-      //   exclude: /(node_modules|bower_components)/,
-      //   loader: 'babel?presets[]=es2015'
-      // },
       {
         test: /services\/.*/,
         exclude: /runtimes\/[^\/]*\/.*/,
@@ -46,7 +41,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style!css'
+        loader: 'style'
+      },
+      {
+        test: /\.css$/,
+        loader: 'css',
+        query: {
+          minimize: true
+        }
       },
       {
         test: /\.css$/,
