@@ -1,3 +1,10 @@
+
+var Loading = function(loading){
+  return function(){
+    return Pending(loading);
+  }
+}
+
 var app = module.exports = angular.module('webpack-example', [
   'ui.router'
 ]);
@@ -19,12 +26,6 @@ app.config([
     app.decorator = $provide.decorator;
   }
 ]);
-
-var Loading = function(loading){
-  return function(){
-    return Pending(loading);
-  }
-}
 
 app.config([
   '$stateProvider',
