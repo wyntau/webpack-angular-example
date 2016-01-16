@@ -39,8 +39,7 @@ app.config([
         resolve: {
           deps: Chunk(function(resolve){
             require([
-              'styles/rootCtrl.css',
-              'controllers/rootCtrl'
+              'controllers/rootCtrl.js'
             ], resolve);
           })
         }
@@ -51,7 +50,7 @@ app.config([
           require([
             'views/home.html',
             'styles/homeCtrl.css',
-            'controllers/homeCtrl'
+            'controllers/homeCtrl.js'
           ], resolve);
         }),
         controller: 'homeCtrl'
@@ -62,7 +61,7 @@ app.config([
           require([
             'views/foo.html',
             'styles/fooCtrl.css',
-            'controllers/fooCtrl'
+            'controllers/fooCtrl.js'
           ], resolve);
         }),
         controller: 'fooCtrl'
@@ -73,7 +72,7 @@ app.config([
           require([
             'views/bar.html',
             'styles/barCtrl.css',
-            'controllers/barCtrl'
+            'controllers/barCtrl.js'
           ], resolve);
         }),
         controller: 'barCtrl'

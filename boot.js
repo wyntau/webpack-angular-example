@@ -25,7 +25,7 @@ window.Chunk = function(loading){
   };
 };
 
-require([
+define([
   'app.js',
   'controllers/rootCtrl.js'
 ], Ready(function(){
