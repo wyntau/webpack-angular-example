@@ -1,17 +1,4 @@
 
-// Chunk(function(resolve){
-//  require([
-//    'controllers/rootCtrl'
-//  ], resolve);
-// })
-
-// define([
-//  'app',
-//  'arg2'
-// ], Ready(function(app, arg2){
-//  app.controller();
-// }))
-
 window.Ready = function(cbk){
   return function(){
     return Promise.all([].slice.call(arguments)).then(function(args){
@@ -24,7 +11,7 @@ window.Ready = function(cbk){
 
 window.Chunk = function(loading){
   return function(){
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve){
       loading(function(){
         Promise.all([].slice.call(arguments)).then(resolve);
       });
@@ -32,7 +19,7 @@ window.Chunk = function(loading){
   };
 };
 
-define([
+require([
   'app.js',
   'controllers/rootCtrl.js'
 ], Ready(function(){
