@@ -12,26 +12,32 @@ module.exports = {
     ]
   },
   entry: {
-    boot: 'boot.js'
+    boot: 'boot.js',
+    vendor: [
+      'bower_components/promiz/promiz.js',
+      'bower_components/angular/angular.js',
+      'bower_components/angular-ui-router/release/angular-ui-router.js'
+    ]
   },
   output: {
     path: 'dist',
     publicPath: '/dist/',
     filename: '[name].js',
-    pathinfo: true
+    pathinfo: false
   },
   plugins: [
-    new ReplaceTaskWebpackPlugin({
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
+    , new ReplaceTaskWebpackPlugin({
       patterns: [{
         match: 'foo',
         replacement: 'foo+bar'
       }]
     })
-    // , new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // })
+    , new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js')
     // , new htmlWebpackPlugin({
     //   filename: '../index.html',
     //   template: 'index.temp.html'
