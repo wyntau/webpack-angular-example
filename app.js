@@ -39,6 +39,7 @@ app.config([
         resolve: {
           deps: Chunk(function(resolve){
             require([
+              'styles/rootCtrl.css',
               'controllers/rootCtrl'
             ], resolve);
           })
@@ -48,48 +49,54 @@ app.config([
         url: '/',
         templateProvider: Chunk(function(resolve){
           require([
-            'views/home.html'
+            'views/home.html',
+            'styles/homeCtrl.css',
+            'controllers/homeCtrl'
           ], resolve);
         }),
         controller: 'homeCtrl',
         resolve: {
-          deps: Chunk(function(resolve) {
-            require([
-              'controllers/homeCtrl'
-            ], resolve);
-          })
+          // deps: Chunk(function(resolve) {
+          //   require([
+          //     'controllers/homeCtrl'
+          //   ], resolve);
+          // })
         }
       })
       .state('example.foo', {
         url: '/foo',
         templateProvider: Chunk(function(resolve){
           require([
-            'views/foo.html'
+            'views/foo.html',
+            'styles/fooCtrl.css',
+            'controllers/fooCtrl'
           ], resolve);
         }),
         controller: 'fooCtrl',
         resolve: {
-          deps: Chunk(function(resolve) {
-            require([
-              'controllers/fooCtrl'
-            ], resolve);
-          })
+          // deps: Chunk(function(resolve) {
+          //   require([
+          //     'controllers/fooCtrl'
+          //   ], resolve);
+          // })
         }
       })
       .state('example.bar', {
         url: '/bar',
         templateProvider: Chunk(function(resolve){
           require([
-            'views/bar.html'
+            'views/bar.html',
+            'styles/barCtrl.css',
+            'controllers/barCtrl'
           ], resolve);
         }),
         controller: 'barCtrl',
         resolve: {
-          deps: Chunk(function(resolve) {
-            require([
-              'controllers/barCtrl'
-            ], resolve);
-          })
+          // deps: Chunk(function(resolve) {
+          //   require([
+          //     'controllers/barCtrl'
+          //   ], resolve);
+          // })
         }
       })
   }

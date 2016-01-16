@@ -1,6 +1,5 @@
 define([
   'app.js',
-  'styles/barCtrl.css',
   'services/serviceNormalB.js',
   'services/serviceNormalC.js'
 ], Ready(function(app) {

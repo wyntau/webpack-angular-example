@@ -1,6 +1,5 @@
 define([
   'app.js',
-  'styles/homeCtrl.css',
   'services/serviceNormalA.js',
   'services/serviceNormalB.js'
 ], Ready(function(app) {
