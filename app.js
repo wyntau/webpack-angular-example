@@ -1,10 +1,4 @@
 
-var Loading = function(loading){
-  return function(){
-    return Pending(loading);
-  }
-}
-
 var app = module.exports = angular.module('webpack-example', [
   'ui.router'
 ]);
@@ -43,7 +37,7 @@ app.config([
         template: '<div ui-view></div>',
         controller: 'rootCtrl',
         resolve: {
-          deps: Loading(function(resolve){
+          deps: Chunk(function(resolve){
             require([
               'controllers/rootCtrl'
             ], resolve);
@@ -55,7 +49,7 @@ app.config([
         templateUrl: 'views/home.html',
         controller: 'homeCtrl',
         resolve: {
-          deps: Loading(function(resolve) {
+          deps: Chunk(function(resolve) {
             require([
               'controllers/homeCtrl'
             ], resolve);
@@ -67,7 +61,7 @@ app.config([
         templateUrl: 'views/foo.html',
         controller: 'fooCtrl',
         resolve: {
-          deps: Loading(function(resolve) {
+          deps: Chunk(function(resolve) {
             require([
               'controllers/fooCtrl'
             ], resolve);
@@ -79,7 +73,7 @@ app.config([
         templateUrl: 'views/bar.html',
         controller: 'barCtrl',
         resolve: {
-          deps: Loading(function(resolve) {
+          deps: Chunk(function(resolve) {
             require([
               'controllers/barCtrl'
             ], resolve);

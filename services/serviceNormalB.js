@@ -1,9 +1,7 @@
-module.exports = Pending(function(resolve){
-  define([
-    'app.js'
-  ], resolve);
-}, function(app){
-  app.factory('serviceNormalB', function(){
+define([
+  'app.js'
+], Ready(function(app) {
+  app.factory('serviceNormalB', function() {
     return 'serviceNormalB';
   });
-});
+}));
