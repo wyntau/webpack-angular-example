@@ -46,7 +46,11 @@ app.config([
       })
       .state('example.home', {
         url: '/',
-        templateUrl: 'views/home.html',
+        templateProvider: Chunk(function(resolve){
+          require([
+            'views/home.html'
+          ], resolve);
+        }),
         controller: 'homeCtrl',
         resolve: {
           deps: Chunk(function(resolve) {
@@ -58,7 +62,11 @@ app.config([
       })
       .state('example.foo', {
         url: '/foo',
-        templateUrl: 'views/foo.html',
+        templateProvider: Chunk(function(resolve){
+          require([
+            'views/foo.html'
+          ], resolve);
+        }),
         controller: 'fooCtrl',
         resolve: {
           deps: Chunk(function(resolve) {
@@ -70,7 +78,11 @@ app.config([
       })
       .state('example.bar', {
         url: '/bar',
-        templateUrl: 'views/bar.html',
+        templateProvider: Chunk(function(resolve){
+          require([
+            'views/bar.html'
+          ], resolve);
+        }),
         controller: 'barCtrl',
         resolve: {
           deps: Chunk(function(resolve) {

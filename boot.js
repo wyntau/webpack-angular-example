@@ -11,9 +11,15 @@ window.Ready = function(cbk){
 
 window.Chunk = function(loading){
   return function(){
-    return new Promise(function(resolve){
+    return new Promise(function(resolve, reject){
       loading(function(){
-        Promise.all([].slice.call(arguments)).then(resolve);
+        Promise.all([].slice.call(arguments)).then(function(args){
+          if(args.length){
+            resolve(args[0]);
+          }else{
+            reject();
+          }
+        });
       });
     });
   };

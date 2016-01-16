@@ -61,7 +61,15 @@ module.exports = {
         query: {
           browsers: ['> 1%']
         }
+      },
+      {
+        test: /\.html$/,
+        loader: 'raw!html-minifier'
       }
     ]
+  },
+  'html-minifier-loader': {
+    collapseWhitespace: true,
+    removeComments: true
   }
 }
