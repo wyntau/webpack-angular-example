@@ -54,14 +54,7 @@ app.config([
             'controllers/homeCtrl'
           ], resolve);
         }),
-        controller: 'homeCtrl',
-        resolve: {
-          // deps: Chunk(function(resolve) {
-          //   require([
-          //     'controllers/homeCtrl'
-          //   ], resolve);
-          // })
-        }
+        controller: 'homeCtrl'
       })
       .state('example.foo', {
         url: '/foo',
@@ -72,14 +65,7 @@ app.config([
             'controllers/fooCtrl'
           ], resolve);
         }),
-        controller: 'fooCtrl',
-        resolve: {
-          // deps: Chunk(function(resolve) {
-          //   require([
-          //     'controllers/fooCtrl'
-          //   ], resolve);
-          // })
-        }
+        controller: 'fooCtrl'
       })
       .state('example.bar', {
         url: '/bar',
@@ -90,14 +76,7 @@ app.config([
             'controllers/barCtrl'
           ], resolve);
         }),
-        controller: 'barCtrl',
-        resolve: {
-          // deps: Chunk(function(resolve) {
-          //   require([
-          //     'controllers/barCtrl'
-          //   ], resolve);
-          // })
-        }
+        controller: 'barCtrl'
       })
   }
 ])
