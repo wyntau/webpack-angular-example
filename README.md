@@ -7,10 +7,9 @@ And only load specific code on demand.
 
 - bower
 - angular.js
-- angular-ui-router
-- es6-promise
+- angular-ui-router.js
+- promiz.js
 - webpack
-- babel-loader
 - then-loader
 - style-loader
 - css-loader

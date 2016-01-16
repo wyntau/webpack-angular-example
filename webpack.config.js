@@ -16,7 +16,7 @@ module.exports = {
   },
   output: {
     path: 'dist',
-    publicPath: 'http://localhost:8080/dist/',
+    publicPath: '/dist/',
     filename: '[name].js',
     pathinfo: true
   },

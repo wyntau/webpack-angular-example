@@ -12,9 +12,6 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
-    "babel-core": "^6.3.17",
-    "babel-loader": "^6.2.0",
-    "babel-preset-es2015": "^6.3.13",
     "css-loader": "^0.23.0",
     "html-webpack-plugin": "^1.7.0",
     "replace-task-webpack-plugin": "^1.0.1",
