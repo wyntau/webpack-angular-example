@@ -5,22 +5,29 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "rm -rf dist && webpack",
-    "dev-server": "webpack-dev-server --colors --progress"
+    "npm": "npm install",
+    "bower": "bower install",
+    "dev": "NODE_ENV=preview webpack --colors --progress",
+    "dev-server": "NODE_ENV=development webpack-dev-server --colors --progress",
+    "build": "rm -rf dist* && NODE_ENV=production webpack -p --colors --progress"
   },
   "author": "Treri",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
+    "bower": "^1.7.2",
     "css-loader": "^0.23.0",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.0",
     "html-minifier-loader": "^1.0.13",
     "html-webpack-plugin": "^1.7.0",
-    "raw-loader": "^0.5.1",
+    "image-webpack-loader": "^1.6.3",
     "replace-task-webpack-plugin": "^1.0.1",
     "serve": "^1.4.0",
     "style-loader": "^0.13.0",
     "then-loader": "^1.0.0",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^1.14.0",
+    "write-file-webpack-plugin": "^3.1.0"
   }
 }

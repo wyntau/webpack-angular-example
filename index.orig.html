@@ -9,8 +9,8 @@
 <body>
   <div ui-view></div>
 
-
-  <script src="/dist/vendor.js"></script>
-  <script src="/dist/boot.js"></script>
+  {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
+  <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+  {% } %}
 </body>
 </html>
