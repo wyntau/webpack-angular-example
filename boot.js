@@ -3,7 +3,7 @@ window.Ready = function(cbk){
   return function(){
     return Promise.all([].slice.call(arguments)).then(function(args){
       if('function' == typeof cbk){
-        cbk.apply(null, args);
+        return cbk.apply(null, args);
       }
     });
   };
