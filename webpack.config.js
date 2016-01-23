@@ -25,17 +25,18 @@ webpackConfig.entry.vendor = [
   'bower_components/angular/angular.js',
   'bower_components/angular-ui-router/release/angular-ui-router.js'
 ];
-
-if(process.env.NODE_ENV == 'development'){
-  webpackConfig.devtool = '#eval';
-  webpackConfig.entry.boot.unshift('webpack-dev-server/client?http://localhost:6200');
-}
 webpackConfig.devServer = {
   contentBase: './',
   port: 6200,
   host: 'localhost',
   outputPath: 'dist_dev'
 };
+if(process.env.NODE_ENV == 'development'){
+  webpackConfig.devtool = '#eval';
+  webpackConfig.entry.boot.unshift('webpack-dev-server/client?http://' +
+                                    webpackConfig.devServer.host + ':' +
+                                    webpackConfig.devServer.port);
+}
 
 if(process.env.NODE_ENV == 'production'){
   var _dir = 'dist'// + (+new Date());
@@ -52,7 +53,13 @@ if(process.env.NODE_ENV == 'production'){
 }else{
   webpackConfig.output = {
     path: 'dist_dev',
-    publicPath: 'http://localhost:6200/dist_dev/',
+    publicPath: 'http://' +
+                webpackConfig.devServer.host +
+                ':' +
+                webpackConfig.devServer.port +
+                '/' +
+                webpackConfig.devServer.outputPath +
+                '/',
     filename: '[name].js',
     pathinfo: true
   };
