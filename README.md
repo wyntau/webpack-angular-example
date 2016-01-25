@@ -1,6 +1,6 @@
-### webpack-example
+### webpack-angular-example
 
-Use Angular, Promise, Webpack to write async load angular code.
+Use Angular, Promise, Webpack etc. to write webapp.
 And only load files on demand.
 
 #### Used libraries or tools
