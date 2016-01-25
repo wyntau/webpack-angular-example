@@ -9,7 +9,8 @@
     "bower": "bower install",
     "dev": "NODE_ENV=preview webpack --colors --progress",
     "dev-server": "NODE_ENV=development webpack-dev-server --colors --progress",
-    "build": "rm -rf dist* && NODE_ENV=production webpack --colors --progress"
+    "build": "rm -rf dist* && NODE_ENV=production webpack --colors --progress",
+    "serve": "serve"
   },
   "author": "Treri",
   "license": "MIT",

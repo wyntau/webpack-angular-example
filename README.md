@@ -1,25 +1,50 @@
 ### webpack-example
 
-Use Angular, Promise, Webpack and ES2015 to write async load angular code.
-And only load specific code on demand.
+Use Angular, Promise, Webpack to write async load angular code.
+And only load files on demand.
 
 #### Used libraries or tools
 
 - bower
+- weppack
+- webpack-dev-server
+- then-loader
+- autoprefixer-loader
+- css-loader
+- style-loader
+- file-loader
+- html-loader
+- html-minifier-loader
+- image-webpack-loader
+- html-webpack-plugin
+- replace-task-webpack-plugin
+- write-file-webpack-plugin
+- promiz.js
 - angular.js
 - angular-ui-router.js
-- promiz.js
-- webpack
-- then-loader
-- style-loader
-- css-loader
 
-#### Run
+#### Requirements
 
-```bash
-npm install
-bower install
-npm run webpack
-npm run serve
+```sh
+npm run npm
+npm run bower
+```
+
+#### Develop
+
+```sh
+npm run dev-server
 ```
 Now open <http://localhost:3000/>
+
+#### Preview generated code
+
+```sh
+npm run dev
+```
+
+#### Build and deploy
+
+```sh
+npm run build
+```
