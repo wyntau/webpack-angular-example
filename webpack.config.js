@@ -5,6 +5,8 @@ var path = require('path')
 
   , webpack = require('webpack')
 
+  , autoprefixer = require('autoprefixer')
+
   , ReplaceTaskWebpackPlugin = require('replace-task-webpack-plugin')
   , htmlWebpackPlugin = require('html-webpack-plugin')
   , WriteFilePlugin = require('write-file-webpack-plugin')
@@ -120,10 +122,7 @@ webpackConfig.module = {
     },
     { // 3
       test: /\.css$/,
-      loader: 'autoprefixer',
-      query: {
-        browsers: ['> 1%']
-      }
+      loader: 'postcss'
     },
     { // 1
       test: /\.html$/,
@@ -156,6 +155,12 @@ webpackConfig.module = {
       loader: 'file?name=fonts/[name]-[hash].[ext]'
     }
   ]
+};
+
+webpackConfig['postcss'] = function(){
+  return [autoprefixer({
+    browsers: ['> 1%']
+  })];
 };
 
 webpackConfig['html-minifier-loader'] = {
