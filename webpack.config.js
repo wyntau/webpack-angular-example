@@ -92,7 +92,7 @@ webpackConfig.plugins.push(new ReplaceTaskWebpackPlugin({
 }));
 
 webpackConfig.plugins.push(new htmlWebpackPlugin({
-  filename: '../index.html',
+  filename: './index.html',
   'template': path.resolve(__dirname, 'index.orig.html')
 }));
 
