@@ -35,7 +35,7 @@ npm run bower
 ```sh
 npm run dev-server
 ```
-Now open <http://localhost:3000/>
+Now open <http://localhost:6200/>
 
 #### Preview generated code
 
