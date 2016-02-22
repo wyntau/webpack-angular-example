@@ -9,7 +9,7 @@ And only load files on demand.
 - weppack
 - webpack-dev-server
 - then-loader
-- autoprefixer-loader
+- postcss-loader
 - css-loader
 - style-loader
 - file-loader
