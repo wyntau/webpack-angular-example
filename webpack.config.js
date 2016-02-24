@@ -109,6 +109,10 @@ webpackConfig.module = {
       exclude: /runtimes\/[^\/]*\/.*/,
       loader: 'then?global,[name]'
     },
+    {
+      test: /promiz\.js$/,
+      loader: 'expose?Promise'
+    },
     { // 1
       test: /\.css$/,
       loader: 'style'
