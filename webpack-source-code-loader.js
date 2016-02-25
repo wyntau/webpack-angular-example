@@ -1,3 +1,5 @@
+// inspired by http://www.cnblogs.com/yjfengwen/p/4198245.html
+
 /*jslint regexp: true, nomen: true, sloppy: true */
 /*global window, navigator, document, setTimeout, opera */
 (function(global, undefined) {
