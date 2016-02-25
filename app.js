@@ -1,5 +1,6 @@
+define(Ready(function(){
 
-var app = module.exports = angular.module('webpack-example', [
+var app = angular.module('webpack-example', [
   'ui.router'
 ]);
 
@@ -79,3 +80,7 @@ app.config([
       })
   }
 ])
+
+return app;
+
+}))
