@@ -12,10 +12,10 @@
     multiSlashReg = /([^:/])\/+\//g,
     ignorePartReg = /[?#].*$/,
     suffixReg = /\.(js|css|html|jpe?g|png|gif)$/,
-    jsReg = /\.js$/,
-    cssReg = /\.css$/,
-    htmlReg = /\.html$/,
-    imageReg = /\.(jpe?g|png|gif)$/,
+    jsReg = /\.js(\?.*)?$/,
+    cssReg = /\.css(\?.*)?$/,
+    htmlReg = /\.html(\?.*)?$/,
+    imageReg = /\.(jpe?g|png|gif)(\?.*)?$/,
 
     seed = {
       // 缓存模块
