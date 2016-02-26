@@ -1,8 +1,98 @@
-// inspired by http://www.cnblogs.com/yjfengwen/p/4198245.html
-
 /*jslint regexp: true, nomen: true, sloppy: true */
 /*global window, navigator, document, setTimeout, opera */
 (function(global, undefined) {
+
+  // lightweight Event Emitter
+  // author: Treri
+  var Event = (function(){
+
+    function Event(){}
+
+    Event.prototype.on = function(evt, cbk, ctx){
+      if(!this._events){
+        this._events = {};
+      }
+      if(!this._events.hasOwnProperty(evt)){
+        this._events[evt] = [];
+      }
+      for(var i = 0; i < this._events[evt].length; i++){
+        if(this._events[evt][i].cbk == cbk){
+          return this;
+        }
+      }
+
+      this._events[evt].push({
+        cbk: cbk,
+        ctx: ctx
+      });
+
+      return this;
+    };
+
+    Event.prototype.once = function(evt, cbk, ctx){
+
+      this.on(evt, callback, this);
+
+      function callback(){
+        cbk.apply(ctx || null, [].slice.call(arguments));
+        this.off(evt, callback);
+      }
+    };
+
+    Event.prototype.off = function(evt, cbk){
+      if(!this._events){
+        return this;
+      }
+      if(!this._events.hasOwnProperty(evt)){
+        return this;
+      }
+
+      if(!cbk){
+        this._events[evt] = [];
+        return this;
+      }
+
+      var index, i;
+      for(i = 0; i < this._events[evt].length; i++){
+        if(this._events[evt][i].cbk == cbk){
+          index = i;
+          break;
+        }
+      }
+
+      if(index !== undefined){
+        this._events[evt].splice(index, 1);
+      }
+
+      return this;
+    };
+
+    Event.prototype.emit = function(evt){
+      if(!evt){
+        return this;
+      }
+      if(!this._events){
+        return;
+      }
+      if(!this._events.hasOwnProperty(evt)){
+        return this;
+      }
+
+      var args = [].slice.call(arguments, 1);
+
+      var i, cbk, ctx;
+      for(i = 0; i < this._events[evt].length; i++){
+        cbk = this._events[evt][i].cbk;
+        ctx = this._events[evt][i].ctx;
+
+        cbk.apply(ctx || null, args);
+      }
+      return this;
+    };
+
+    return Event;
+  })();
+
   var document = global.document,
     head = document.head || document.getElementsByTagName('head')[0] || document.documentElement,
     baseElement = document.getElementsByTagName('base')[0],
@@ -31,30 +121,35 @@
       }
     };
 
-  /* utils */
-  function isType(type) {
-    return function(obj) {
-      return {}.toString.call(obj) === '[object ' + type + ']';
-    }
+  function isType(obj, type){
+    return Object.prototype.toString.call(obj) === '[object ' + type + ']';
   }
-
-  var isFunction = isType('Function');
-  var isString = isType('String');
-  var isArray = isType('Array');
 
   /**
    * 遍历数组，回调返回 true 时终止遍历
    */
-  function each(arr, callback) {
-    var i, len;
-
-    if (isArray(arr)) {
-      for (i = 0, len = arr.length; i < len; i++) {
-        if (callback(arr[i], i, arr)) {
-          break;
-        }
+  function forEach(arr, callback) {
+    if(!isType(arr, 'Array')){
+      return;
+    }
+    for (var i = 0; i < arr.length; i++) {
+      if (callback(arr[i], i, arr)) {
+        break;
       }
     }
+  }
+
+  function map(arr, callback){
+    if(!isType(arr, 'Array')){
+      return [];
+    }
+
+    var result = [];
+    for(var i = 0; i < arr.length; i++){
+      result.push(callback(arr[i], i, arr));
+    }
+
+    return result;
   }
 
   /**
@@ -75,18 +170,27 @@
 
   /**
    * 复制源对象的属性到目标对象中
+   * 支持一次从多个source中进行扩展
    */
-  function mixin(target, source) {
-    if (!source) {
+  function extend(target) {
+    var sources = [].slice.call(arguments, 1);
+    if (!sources.length) {
       return target;
     }
-    for (var key in source) {
-      if (!target[key] || isString(target[key])) {
-        target[key] = source[key];
-      } else {
-        extend(target[key], source[key]);
+
+    var i, source, key;
+    for(i = 0; i < sources.length; i++){
+      source = sources[i];
+      for (key in source) {
+        if (!target[key] || isType(target[key], 'String')) {
+          target[key] = source[key];
+        } else {
+          extend(target[key], source[key]);
+        }
       }
     }
+
+    return target;
   }
 
   function makeError(name, msg) {
@@ -96,13 +200,13 @@
   /**
    * 获取全局变量值。允许格式：a.b.c
    */
-  function getGlobal(value) {
-    if (!value) {
-      return value;
+  function getGlobal(keychain) {
+    if (!keychain) {
+      return keychain;
     }
     var g = global;
-    each(value.split('.'), function(part) {
-      g = g[part];
+    forEach(keychain.split('.'), function(key) {
+      g = g[key];
     });
     return g;
   }
@@ -156,7 +260,7 @@
    * @param {String} id 模块id
    * @param {String} baseUrl 模块url对应的基地址
    */
-  function id2Url(id, baseUrl) {
+  function id2Url(id) {
     var config = seed.config;
 
     id = config.paths[id] || id;
@@ -169,16 +273,11 @@
 
     id = suffixReg.test(id) ? id : (id + '.js');
 
-    id = realpath(dirname(baseUrl) + id);
+    id = realpath(dirname(seed.config.baseUrl) + id);
 
     id = id + (config.urlArgs || "");
 
     return id;
-  }
-
-
-  function getScripts() {
-    return document.getElementsByTagName('script');
   }
 
   /**
@@ -197,9 +296,7 @@
       return interactiveScript = document.currentScript;
     }
 
-    var scripts = getScripts();
-    var script;
-    var i;
+    var i, script, scripts = document.getElementsByTagName('script');
 
     for(i = scripts.length - 1; i >= 0; i--){
       script = scripts[i];
@@ -215,13 +312,13 @@
   /**
    * 请求JavaScript文件
    */
-  function loadScript(url, callback, context) {
+  function loadScript(id, callback, context) {
     var config = seed.config,
       node = document.createElement('script'),
       supportOnload = 'onload' in node;
 
     node.charset = config.charset || 'utf-8';
-    node.setAttribute('data-module', url);
+    node.setAttribute('data-module-id', id);
 
     // 绑定事件
     if (supportOnload) {
@@ -240,7 +337,7 @@
     }
 
     node.async = true;
-    node.src = url;
+    node.src = id2Url(id);
 
     // 在IE6-8浏览器中，某些缓存会导致结点一旦插入就立即执行脚本
     currentlyAddingScript = node;
@@ -261,11 +358,11 @@
     }
   }
 
-  function loadCss(url, callback, context) {
+  function loadCss(id, callback, context) {
     var link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', url);
+    link.setAttribute('href', id2Url(id));
 
     var parent = document.getElementsByTagName('head')[0] || document.body;
     parent.appendChild(link);
@@ -276,7 +373,7 @@
     callback.call(context, null);
   }
 
-  function loadText(url, callback, context) {
+  function loadText(id, callback, context) {
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 
     xhr.onreadystatechange = function() {
@@ -284,8 +381,12 @@
         callback.call(context, null, xhr.responseText);
       }
     };
-    xhr.open('GET', url, true);
+    xhr.open('GET', id2Url(id), true);
     xhr.send(null);
+  }
+
+  function uniqueID(){
+    return "seed_" + (+new Date()) + (Math.random() + '').slice(-8);
   }
 
   // 记录模块的状态信息
@@ -306,217 +407,131 @@
     ERROR: 6
   };
 
-  function Module(url, deps) {
-    this.url = url;
-    this.deps = deps || []; // 依赖模块列表
-    this.dependencies = []; // 依赖模块实例列表
-    this.refs = []; // 引用模块列表，用于模块加载完成之后通知其引用模块
+  function Module(id) {
+    this.id = id;
+    this.factory = null;
+    this.deps = [];
     this.exports = {};
     this.status = Module.STATUS.INITIAL;
-
-    /*
-     this.id
-     this.factory
-     */
   }
 
-  Module.prototype = {
-    constructor: Module,
-
-    load: function() {
-
-      var mod = this,
-        STATUS = Module.STATUS,
-        args = [];
-      if (mod.status >= STATUS.LOAD) {
-        return mod;
-      }
-
-      mod.status = STATUS.LOAD;
-
-      mod.resolve();
-      mod.pass();
-      mod.checkCircular();
-
-      each(mod.dependencies, function(dep) {
-        if (dep.status < STATUS.FETCH) {
-          dep.fetch();
-        } else if (dep.status === STATUS.SAVE) {
-          dep.load();
-        } else if (dep.status >= STATUS.EXECUTED) {
-          args.push(dep.exports);
-        }
-      });
-
-      // FIXED: 只有状态为LOAD时, 才设置状态为EXECUTING
-      // 防止loadCss后, fireFactory已经将mod的状态设置为EXECUTED最终状态
-      // 又在这里设置回EXECUTING
-      if (mod.status <= STATUS.LOAD) {
-        mod.status = STATUS.EXECUTING;
-      }
-
-      // 依赖模块加载完成
-      if (args.length === mod.dependencies.length) {
-        mod.makeExports(args);
-        mod.status = STATUS.EXECUTED;
-        mod.fireFactory();
-      }
-    },
-
-    /**
-     * 初始化依赖模块
-     */
-    resolve: function() {
-      var mod = this;
-
-      each(mod.deps, function(id) {
-        var m, url;
-
-        if (seed.modules[id]) {
-          mod.dependencies.push(seed.modules[id])
-        } else {
-          url = id2Url(id, seed.config.baseUrl);
-          m = Module.get(url);
-          m.id = id;
-          mod.dependencies.push(m);
-        }
-      });
-    },
-
-    /**
-     * 传递模块给依赖模块，用于依赖模块加载完成之后通知引用模块
-     */
-    pass: function() {
-      var mod = this;
-
-      each(mod.dependencies, function(dep) {
-        var repeat = false;
-
-        each(dep.refs, function(ref) {
-          if (ref === mod.url) {
-            repeat = true;
-            return true;
-          }
-        });
-
-        if (!repeat) {
-          dep.refs.push(mod.url);
-        }
-      });
-    },
-
-    /**
-     * 解析循环依赖
-     */
-    checkCircular: function() {
-      var mod = this,
-        STATUS = Module.STATUS,
-        isCircular = false,
-        args = [];
-
-      each(mod.dependencies, function(dep) {
-        isCircular = false;
-        // 检测是否存在循环依赖
-        if (dep.status === STATUS.EXECUTING) {
-          each(dep.dependencies, function(m) {
-            if (m.url === mod.url) {
-              // 存在循环依赖
-              return isCircular = true;
-            }
-          });
-
-          // 尝试解决循环依赖
-          if (isCircular) {
-            each(dep.dependencies, function(m) {
-              if (m.url !== mod.url && m.status >= STATUS.EXECUTED) {
-                args.push(m.exports);
-              } else if (m.url === mod.url) {
-                args.push(undefined);
-              }
-            });
-
-            if (args.length === dep.dependencies.length) {
-              try {
-                dep.exports = isFunction(dep.factory) ? dep.factory.apply(global, args) : dep.factory;
-                dep.status = STATUS.EXECUTED;
-              } catch (e) {
-                dep.exports = undefined;
-                dep.status = STATUS.ERROR;
-                makeError("Can't fix circular dependency", mod.url + " --> " + dep.url);
-              }
-            }
-          }
-        }
-      });
-    },
-
-    makeExports: function(args) {
-      var mod = this,
-        result;
-
-      result = isFunction(mod.factory) ? mod.factory.apply(global, args) : mod.factory;
-      // 如果是plainObject, 说明没有在factory中进行exports赋值, 使用factory的返回值
-      mod.exports = isPlainObject(mod.exports) ? result : mod.exports;
-    },
-
-    /**
-     * 模块执行完毕，触发引用模块回调
-     */
-    fireFactory: function() {
-      var mod = this,
-        STATUS = Module.STATUS;
-      each(mod.refs, function(ref) {
-        var args = [];
-        ref = Module.get(ref);
-
-        each(ref.dependencies, function(m) {
-          if (m.status >= STATUS.EXECUTED) {
-            args.push(m.exports);
-          }
-        });
-
-        if (args.length === ref.dependencies.length) {
-          ref.makeExports(args);
-          ref.status = STATUS.EXECUTED;
-          ref.fireFactory();
-        } else {
-          ref.load();
-        }
-      });
-    },
-
+  extend(Module.prototype = new Event, {
     /**
      * 发送请求加载资源
      */
     fetch: function() {
-      var mod = this,
-        STATUS = Module.STATUS;
-
-      if (mod.status >= STATUS.FETCH) {
-        return mod;
+      if (this.status >= Module.STATUS.FETCH) {
+        return this;
       }
-      mod.status = STATUS.FETCH;
+      this.status = Module.STATUS.FETCH;
 
-      if (jsReg.test(mod.url)) {
-        loadScript(mod.url, mod.onloadScript, mod);
-      } else if (cssReg.test(mod.url)) {
-        loadCss(mod.url, mod.onloadCss, mod);
-      } else if (htmlReg.test(mod.url)) {
-        loadText(mod.url, mod.onloadText, mod);
+      var url = id2Url(this.id);
+
+      if (jsReg.test(url)) {
+        loadScript(this.id, this.onloadScript, this);
+      } else if (cssReg.test(url)) {
+        loadCss(this.id, this.onloadCss, this);
+      } else if (htmlReg.test(url)) {
+        loadText(this.id, this.onloadText, this);
       }
+    },
+
+    save: function(deps) {
+      if (this.status >= Module.STATUS.SAVE) {
+        return this;
+      }
+      this.status = Module.STATUS.SAVE;
+      this.deps = deps || [];
+    },
+
+    load: function() {
+      var self = this
+
+      if (self.status >= Module.STATUS.LOAD) {
+        return self;
+      }
+
+      self.status = Module.STATUS.LOAD;
+
+      // 如果没有依赖, 则直接执行factory方法
+      if(self.deps.length === 0){
+        return self.fireFactory();
+      }
+
+      forEach(self.deps, function(id){
+        var module = Module.get(id);
+
+        // 检查循环依赖
+        var isCircular = false;
+        forEach(module.deps, function(id){
+          if(id === self.id){
+            return isCircular = true;
+          }
+        });
+        if(isCircular){
+          throw new Error('circular dependency: ' + self.id + ' ==> ' + id + ' ==> ' + self.id);
+          return;
+        }
+
+        if(module.status < Module.STATUS.EXECUTED){
+          module.once('EXECUTED', self.executing, self);
+        }
+
+        if(module.status < Module.STATUS.FETCH){
+          module.fetch();
+        }else if(module.status === Module.STATUS.SAVE){
+          module.load();
+        }else if(module.status >= Module.STATUS.EXECUTED){
+          self.executing();
+        }
+      });
+    },
+
+    // 检查是否全部依赖加载完毕
+    executing: function(){
+      var count = this.deps.length;
+      var deps = this.deps.slice();
+      forEach(this.deps, function(id, index){
+        var module = Module.get(id);
+
+        if(module.status >= Module.STATUS.EXECUTED){
+          count --;
+          deps.splice(index, 1);
+        }
+      });
+
+
+      if(count <= 0){
+        this.fireFactory();
+      }
+    },
+
+    fireFactory: function(){
+      var args = map(this.deps, function(id){
+        var module = Module.get(id);
+        return module.exports;
+      });
+
+      if(isType(this.factory, 'Function')){
+        this.exports = this.factory.apply(this, args);
+      }else{
+        this.exports = this.factory;
+      }
+
+      this.status = Module.STATUS.EXECUTED;
+      this.emit('EXECUTED');
     },
 
     onloadScript: function(error) {
       var mod = this,
         config = seed.config,
-        STATUS = Module.STATUS,
         shim, shimDeps;
 
       if (error) {
         mod.exports = undefined;
-        mod.status = STATUS.ERROR;
-        mod.fireFactory();
-        return mod;
+        mod.status = Module.STATUS.ERROR;
+        mod.emit('EXECUTED');
+        return;
       }
 
       // 非AMD模块
@@ -532,59 +547,31 @@
     },
 
     onloadCss: function(error) {
-      var mod = this;
-
       if (error) {
-        mod.exports = undefined;
-        mod.status = Module.STATUS.ERROR;
-        mod.fireFactory();
-        return mod;
+        this.exports = undefined;
+        this.status = Module.STATUS.ERROR;
+        this.fireFactory();
+        return;
       }
-      mod.exports = true;
-      mod.status = Module.STATUS.EXECUTED;
-      mod.fireFactory();
-      return mod;
+      this.exports = true;
+      this.status = Module.STATUS.EXECUTED;
+      this.emit('EXECUTED');
+      return;
     },
 
     onloadText: function(error, text) {
-      var mod = this;
-
       if (error) {
-        mod.exports = undefined;
-        mod.status = Module.STATUS.ERROR;
-        mod.fireFactory();
-        return mod;
+        this.exports = undefined;
+        this.status = Module.STATUS.ERROR;
+        // this.emit('EXECUTED');
+        return;
       }
-      mod.exports = text;
-      mod.status = Module.STATUS.EXECUTED;
-      mod.fireFactory();
-      return mod;
-    },
-
-    save: function(deps) {
-      var mod = this,
-        STATUS = Module.STATUS;
-
-      if (mod.status >= STATUS.SAVE) {
-        return mod;
-      }
-      mod.status = STATUS.SAVE;
-
-      each(deps, function(d) {
-        var repeat = false;
-        each(mod.dependencies, function(d2) {
-          if (d === d2.id) {
-            return repeat = true;
-          }
-        });
-
-        if (!repeat) {
-          mod.deps.push(d);
-        }
-      });
+      this.exports = text;
+      this.status = Module.STATUS.EXECUTED;
+      this.emit('EXECUTED');
+      return;
     }
-  };
-
+  });
 
   /**
    * 初始化模块加载
@@ -596,7 +583,7 @@
       script = document.currentScript;
     } else {
       // 正常情况下，在页面加载时，当前js文件的script标签始终是最后一个
-      scripts = getScripts();
+      scripts = document.getElementsByTagName('script');
       script = scripts[scripts.length - 1];
     }
 
@@ -607,17 +594,13 @@
       url = script.hasAttribute ? script.src : script.getAttribute("src", 4);
       // 如果seed是通过script标签内嵌到页面，baseUrl为当前页面的路径
       seed.config.baseUrl = dirname(url);
-      Module.use([initMod], noop, Module.guid());
+
+      var module = new Module();
+      module.save([initMod]);
+      module.load();
     }
 
     scripts = script = null;
-  };
-
-  /**
-   * 生成一个唯一id
-   */
-  Module.guid = function() {
-    return "seed_" + (+new Date()) + (Math.random() + '').slice(-8);
   };
 
   /**
@@ -626,28 +609,14 @@
    * @param url
    * @param deps
    */
-  Module.get = function(url, deps) {
-    return seed.modules[url] || (seed.modules[url] = new Module(url, deps));
-  };
+  Module.get = function(id) {
 
-  /**
-   * 加载模块
-   *
-   * @param {Array} ids 依赖模块的id列表
-   * @param {Function} factory 模块加载完成之后的回调函数
-   * @param {String} id 模块id
-   */
-  Module.use = function(ids, factory, id) {
-    var config = seed.config,
-      mod, url;
+    id = id.replace(ignorePartReg, '');
+    if(!suffixReg.test(id)){
+      id += '.js';
+    }
 
-    ids = isString(ids) ? [ids] : ids;
-    url = id2Url(id, config.baseUrl);
-    mod = Module.get(url, ids);
-    mod.id = id;
-    mod.factory = factory;
-
-    mod.load();
+    return seed.modules[id] || (seed.modules[id] = new Module(id));
   };
 
   // 页面已经存在AMD加载器或者seed已经加载
@@ -655,7 +624,7 @@
     return;
   }
 
-  define = function(id, deps, factory) {
+  function define(id, deps, factory) {
     var currentScript, mod;
 
     if (factory == null /* or undefined */ ) {
@@ -669,7 +638,7 @@
         // define(deps, factory)
         factory = deps;
         deps = [];
-        if (isArray(id)) {
+        if (isType(id, 'Array')) {
           deps = id;
           id = null;
         }
@@ -677,7 +646,7 @@
     }
 
     if (!id && (currentScript = getCurrentScript())) {
-      id = currentScript.getAttribute("data-module");
+      id = currentScript.getAttribute("data-module-id");
     }
 
     if (id) {
@@ -687,31 +656,36 @@
       mod.load();
     }
   };
-
   define.amd = {};
 
-  require = function(ids, callback) {
+  function require(deps, callback) {
 
     // if require image, just return absolute url
-    if (isString(ids) && imageReg.test(ids)) {
-      return id2Url(ids, seed.config.baseUrl);
+    if (isType(deps, 'String') && imageReg.test(deps)) {
+      return id2Url(deps, seed.config.baseUrl);
     }
 
     // require(callback)
-    if (isFunction(ids)) {
-      callback = ids;
-      ids = [];
+    if (isType(deps, 'Function')) {
+      callback = deps;
+      deps = [];
     }
 
-    Module.use(ids, callback, Module.guid());
+    var module = new Module(uniqueID());
+    module.factory = callback;
+    module.save(deps);
+    module.load();
   };
 
   require.config = function(config) {
-    mixin(seed.config, config);
+    extend(seed.config, config);
     if(!/\/$/.test(seed.config.baseUrl)){
       seed.config.baseUrl += '/';
     }
   };
+
+  global.define = define;
+  global.require = require;
 
   // 初始化
   Module.init();
